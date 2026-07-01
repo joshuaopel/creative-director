@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PR #2026 · Merge Joshua Opel into github/brand-studio</title>
+<meta name="description" content="joshuaopel wants to merge 20 years of creative leadership into github:brand-studio. All checks have passed. An interactive application by Joshua Opel — Creative Director.">
+<meta property="og:title" content="PR #2026 · feat(brand-studio): hire a Creative Director who builds like a developer">
+<meta property="og:description" content="joshuaopel wants to merge 20 years of creative leadership into github:brand-studio. All checks have passed.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://github.com/joshuaopel.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='%233fb950' d='M1.5 3.25a2.25 2.25 0 1 1 3 2.122v5.256a2.251 2.251 0 1 1-1.5 0V5.372A2.25 2.25 0 0 1 1.5 3.25Zm5.677-.177L9.573.677A.25.25 0 0 1 10 .854V2.5h1A2.5 2.5 0 0 1 13.5 5v5.628a2.251 2.251 0 1 1-1.5 0V5a1 1 0 0 0-1-1h-1v1.646a.25.25 0 0 1-.427.177L7.177 3.427a.25.25 0 0 1 0-.354ZM3.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm0 9.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm8.25.75a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Z'/></svg>">
+<style>
+:root{
+  --bg:#0d1117; --bg-subtle:#161b22; --bg-inset:#010409;
+  --border:#30363d; --border-subtle:#21262d;
+  --fg:#e6edf3; --fg-muted:#8b949e; --fg-subtle:#6e7681;
+  --green:#3fb950; --green-emphasis:#238636; --green-hover:#2ea043;
+  --purple:#a371f7; --purple-emphasis:#8957e5;
+  --blue:#58a6ff; --orange:#d29922; --red:#f85149;
+  --g0:#161b22; --g1:#0e4429; --g2:#006d32; --g3:#26a641; --g4:#39d353;
+  --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;
+  --font-mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --shadow:0 8px 24px rgba(1,4,9,.6);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font-family:var(--font-sans);cursor:pointer}
+.mono{font-family:var(--font-mono)}
+svg{vertical-align:text-bottom;fill:currentColor}
+
+/* ---------- notice banner ---------- */
+.notice{background:linear-gradient(90deg,#1a1230,#0f2418);border-bottom:1px solid var(--border);padding:10px 16px;text-align:center;color:var(--fg);font-size:13px}
+.notice b{color:var(--green)}
+.notice .dismiss{background:none;border:none;color:var(--fg-muted);font-size:16px;margin-left:12px}
+.notice .dismiss:hover{color:var(--fg)}
+
+/* ---------- repo header ---------- */
+.repo-header{background:var(--bg-subtle);border-bottom:1px solid var(--border);padding:16px 24px}
+.repo-header-inner{max-width:1216px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.crumbs{display:flex;align-items:center;gap:6px;font-size:16px}
+.crumbs .octo{color:var(--fg)}
+.crumbs a{color:var(--blue)}
+.crumbs .repo-name{font-weight:600}
+.badge-pill{font-size:12px;color:var(--fg-muted);border:1px solid var(--border);border-radius:2em;padding:0 8px;line-height:20px;font-weight:500}
+.repo-actions{display:flex;gap:8px}
+.gh-btn{display:inline-flex;align-items:center;gap:6px;background:#21262d;border:1px solid var(--border);color:var(--fg);border-radius:6px;padding:4px 12px;font-size:12px;font-weight:500;line-height:20px}
+.gh-btn:hover{background:#30363d;border-color:#8b949e}
+.gh-btn .count{background:rgba(110,118,129,.4);border-radius:2em;padding:0 6px;font-size:11px;font-weight:600}
+.gh-btn.starred svg{color:#e3b341}
+
+/* ---------- container / pr header ---------- */
+.container{max-width:1216px;margin:0 auto;padding:24px 24px 64px}
+.pr-title{font-size:26px;font-weight:400;line-height:1.25;word-break:break-word}
+.pr-title .mono{font-weight:600}
+.pr-title .num{color:var(--fg-muted);font-weight:300}
+.pr-meta{margin:8px 0 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:var(--fg-muted)}
+.state{display:inline-flex;align-items:center;gap:6px;border-radius:2em;padding:5px 12px;font-size:14px;font-weight:500;color:#fff}
+.state.open{background:var(--green-emphasis)}
+.state.merged{background:var(--purple-emphasis)}
+.branch{font-family:var(--font-mono);font-size:12px;background:rgba(56,139,253,.15);color:var(--blue);border-radius:6px;padding:2px 6px;white-space:nowrap}
+
+/* ---------- tabs ---------- */
+.tabs{display:flex;gap:8px;border-bottom:1px solid var(--border);margin-bottom:24px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{display:inline-flex;align-items:center;gap:8px;background:none;border:none;border-bottom:2px solid transparent;color:var(--fg-muted);padding:8px 16px;font-size:14px;white-space:nowrap}
+.tab:hover{color:var(--fg)}
+.tab.active{color:var(--fg);border-bottom-color:#f78166;font-weight:600}
+.tab .counter{background:rgba(110,118,129,.4);border-radius:2em;padding:0 6px;font-size:12px;font-weight:500}
+
+/* ---------- layout ---------- */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 296px;gap:24px}
+.tab-panel{display:none;min-width:0}
+.tab-panel.active{display:block}
+
+/* ---------- timeline / comments ---------- */
+.timeline-item{position:relative;padding-left:56px;margin-bottom:16px}
+.timeline-item::before{content:"";position:absolute;left:20px;top:0;bottom:-16px;width:2px;background:var(--border-subtle)}
+.timeline-item:last-child::before{display:none}
+.avatar{width:40px;height:40px;border-radius:50%;position:absolute;left:0;top:0;border:1px solid var(--border);background:var(--bg-subtle)}
+.avatar.small{width:24px;height:24px;position:static;vertical-align:middle}
+.avatar-icon{display:flex;align-items:center;justify-content:center;color:var(--fg)}
+.comment{border:1px solid var(--border);border-radius:6px;background:var(--bg)}
+.comment-header{background:var(--bg-subtle);border-bottom:1px solid var(--border);border-radius:6px 6px 0 0;padding:8px 16px;font-size:13px;color:var(--fg-muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.comment-header b{color:var(--fg)}
+.author-badge{font-size:12px;border:1px solid var(--border);border-radius:2em;padding:0 7px;color:var(--fg-muted)}
+.comment-body{padding:16px;overflow-x:auto}
+.comment-body h2{font-size:18px;padding-bottom:6px;border-bottom:1px solid var(--border-subtle);margin:20px 0 12px}
+.comment-body h2:first-child{margin-top:0}
+.comment-body p{margin-bottom:12px}
+.comment-body ul{margin:0 0 12px 24px}
+.comment-body li{margin-bottom:4px}
+.comment-body code{font-family:var(--font-mono);font-size:85%;background:rgba(110,118,129,.25);border-radius:6px;padding:2px 5px}
+.comment-body .hl{color:var(--green);font-weight:600}
+.event{position:relative;padding-left:56px;margin-bottom:16px;color:var(--fg-muted);font-size:13px;display:flex;align-items:flex-start;gap:8px}
+.event::before{content:"";position:absolute;left:20px;top:-8px;bottom:-16px;width:2px;background:var(--border-subtle);z-index:0}
+.event .event-icon{position:absolute;left:10px;top:0;width:22px;height:22px;border-radius:50%;background:#30363d;display:flex;align-items:center;justify-content:center;color:var(--fg-muted);z-index:1}
+.event .event-icon.green{background:var(--green-emphasis);color:#fff}
+.event .event-icon.purple{background:var(--purple-emphasis);color:#fff}
+.event b{color:var(--fg)}
+.label{display:inline-block;font-size:12px;font-weight:500;border-radius:2em;padding:0 8px;line-height:20px;margin:1px}
+
+/* ---------- contribution graph ---------- */
+.graph-card{border:1px solid var(--border);border-radius:6px;padding:16px;background:var(--bg)}
+.graph-card h3{font-size:14px;margin-bottom:4px}
+.graph-card .sub{color:var(--fg-muted);font-size:12px;margin-bottom:12px;font-family:var(--font-mono)}
+.graph-scroll{overflow-x:auto;padding-bottom:4px}
+.graph{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,10px);gap:3px;width:max-content}
+.cell{width:10px;height:10px;border-radius:2px;background:var(--g0);outline:1px solid rgba(255,255,255,.04);outline-offset:-1px}
+.cell.milestone{outline:1.5px solid var(--orange);outline-offset:-1px;animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.6)}}
+.graph-eras{display:flex;width:max-content;font-size:11px;color:var(--fg-subtle);font-family:var(--font-mono);margin-top:6px;border-top:1px solid var(--border-subtle);padding-top:4px}
+.graph-legend{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--fg-muted);margin-top:10px;justify-content:flex-end}
+.graph-legend .cell{outline:none}
+#tooltip{position:fixed;z-index:100;background:#1c2128;border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--fg);pointer-events:none;display:none;box-shadow:var(--shadow);max-width:260px}
+#tooltip b{color:var(--green)}
+
+/* ---------- checks + merge box ---------- */
+.merge-box{border:1px solid var(--border);border-radius:6px;background:var(--bg);overflow:hidden}
+.merge-status-row{display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);align-items:flex-start}
+.merge-status-row:last-child{border-bottom:none}
+.status-icon{flex:none;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.status-icon.green{background:var(--green-emphasis);color:#fff}
+.status-icon.purple{background:var(--purple-emphasis);color:#fff}
+.checks-list{border-top:1px solid var(--border-subtle);max-height:280px;overflow-y:auto}
+.check-row{display:flex;align-items:center;gap:10px;padding:8px 16px;border-bottom:1px solid var(--border-subtle);font-size:13px;background:var(--bg-subtle)}
+.check-row:last-child{border-bottom:none}
+.check-row .name{font-weight:600;white-space:nowrap;font-family:var(--font-mono);font-size:12px}
+.check-row .desc{color:var(--fg-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.check-row .ok{color:var(--green);flex:none}
+.check-row .detail-link{margin-left:auto;font-size:12px;white-space:nowrap}
+.btn-merge{display:inline-flex;align-items:center;gap:6px;background:var(--green-emphasis);color:#fff;border:1px solid rgba(240,246,252,.1);border-radius:6px;padding:6px 16px;font-size:14px;font-weight:500}
+.btn-merge:hover{background:var(--green-hover)}
+.btn-merge.confirm{background:var(--purple-emphasis)}
+.btn-merge.confirm:hover{background:var(--purple)}
+.merged-cta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn-cta{display:inline-flex;align-items:center;gap:6px;background:#21262d;border:1px solid var(--border);color:var(--fg);border-radius:6px;padding:6px 14px;font-size:13px;font-weight:500}
+.btn-cta:hover{background:#30363d;text-decoration:none}
+.btn-cta.primary{background:var(--green-emphasis);border-color:rgba(240,246,252,.1)}
+.btn-cta.primary:hover{background:var(--green-hover)}
+
+/* ---------- sidebar ---------- */
+.sidebar{font-size:12px}
+.sidebar-section{border-bottom:1px solid var(--border-subtle);padding:16px 0}
+.sidebar-section:first-child{padding-top:0}
+.sidebar-section h4{color:var(--fg-muted);font-size:12px;margin-bottom:8px;font-weight:600}
+.reviewer{display:flex;align-items:center;gap:8px;margin-bottom:8px;color:var(--fg)}
+.reviewer .status{margin-left:auto}
+.milestone-bar{height:8px;background:#21262d;border-radius:4px;overflow:hidden;margin:6px 0}
+.milestone-bar>div{height:100%;background:var(--green);width:90%;border-radius:4px}
+.sidebar .contact-list a{display:flex;align-items:center;gap:8px;color:var(--fg);padding:4px 0}
+.sidebar .contact-list a:hover{color:var(--blue);text-decoration:none}
+
+/* ---------- commits tab ---------- */
+.commit-group-title{display:flex;align-items:center;gap:8px;color:var(--fg-muted);font-size:13px;margin:16px 0 8px;padding-left:4px}
+.commit-list{border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.commit-row{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border-subtle);background:var(--bg)}
+.commit-row:last-child{border-bottom:none}
+.commit-row:hover{background:var(--bg-subtle)}
+.commit-msg{font-weight:600;color:var(--fg);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.commit-msg small{display:block;font-weight:400;color:var(--fg-muted);font-size:12px}
+.commit-right{margin-left:auto;display:flex;align-items:center;gap:8px;flex:none}
+.verified{font-size:11px;color:var(--green);border:1px solid rgba(63,185,80,.4);border-radius:2em;padding:0 7px;line-height:18px}
+.sha{font-family:var(--font-mono);font-size:12px;color:var(--fg-muted);border:1px solid var(--border);border-radius:6px;padding:2px 8px}
+.sha:hover{color:var(--blue)}
+
+/* ---------- files tab ---------- */
+.file-diff{border:1px solid var(--border);border-radius:6px;margin-bottom:16px;overflow:hidden}
+.file-header{background:var(--bg-subtle);border-bottom:1px solid var(--border);padding:8px 12px;font-family:var(--font-mono);font-size:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.diff-stat{font-family:var(--font-mono);font-size:12px}
+.diff-stat .add{color:var(--green)}
+.diff-stat .del{color:var(--red)}
+.diff-table{width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:12px;line-height:20px}
+.diff-table td{padding:0 10px;white-space:pre;vertical-align:top}
+.diff-table .ln{width:1%;min-width:40px;text-align:right;color:var(--fg-subtle);user-select:none}
+.diff-table .add-line{background:rgba(46,160,67,.15)}
+.diff-table .add-line .ln{background:rgba(46,160,67,.25)}
+.diff-table .del-line{background:rgba(248,81,73,.1)}
+.diff-table .del-line .ln{background:rgba(248,81,73,.2)}
+.diff-table .hunk{background:rgba(56,139,253,.1);color:var(--fg-muted)}
+.diff-table .cmt{color:var(--fg-subtle)}
+
+/* ---------- copilot panel ---------- */
+.copilot-fab{position:fixed;bottom:24px;right:24px;z-index:60;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#8957e5,#3fb950);border:1px solid var(--border);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);transition:transform .15s}
+.copilot-fab:hover{transform:scale(1.08)}
+.copilot-panel{position:fixed;bottom:92px;right:24px;z-index:60;width:380px;max-width:calc(100vw - 32px);max-height:min(560px,calc(100vh - 120px));background:var(--bg-subtle);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);display:none;flex-direction:column;overflow:hidden}
+.copilot-panel.open{display:flex}
+.copilot-head{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.copilot-head b{font-size:14px}
+.copilot-head small{color:var(--fg-muted);display:block;font-size:11px}
+.copilot-head .dismiss{margin-left:auto;background:none;border:none;color:var(--fg-muted);font-size:16px}
+.copilot-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:92%;border-radius:12px;padding:8px 12px;font-size:13px;white-space:pre-wrap}
+.msg.bot{background:#1c2128;border:1px solid var(--border-subtle);align-self:flex-start}
+.msg.user{background:var(--green-emphasis);color:#fff;align-self:flex-end}
+.msg.bot .cursor{display:inline-block;width:7px;height:14px;background:var(--green);vertical-align:text-bottom;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.copilot-chips{padding:0 16px 12px;display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:rgba(56,139,253,.1);border:1px solid rgba(56,139,253,.4);color:var(--blue);border-radius:2em;padding:4px 12px;font-size:12px}
+.chip:hover{background:rgba(56,139,253,.25)}
+.chip:disabled{opacity:.4;cursor:default}
+
+/* ---------- footer ---------- */
+.site-footer{border-top:1px solid var(--border);margin-top:48px;padding-top:24px;color:var(--fg-muted);font-size:12px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+.site-footer .octo{color:var(--fg-muted)}
+
+/* ---------- confetti ---------- */
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:200}
+
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{order:2}
+  .pr-title{font-size:20px}
+  .container{padding:16px 16px 96px}
+  .check-row .desc{white-space:normal}
+}
+@media (prefers-reduced-motion:reduce){
+  .cell.milestone{animation:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="notice" id="notice">
+  👋 Hi — this isn't a real pull request. <b>It's a job application.</b> Everything below is true, and yes, the merge button works. — Joshua
+  <button class="dismiss" onclick="document.getElementById('notice').style.display='none'" aria-label="Dismiss">✕</button>
+</div>
+
+<header class="repo-header">
+  <div class="repo-header-inner">
+    <div class="crumbs">
+      <svg class="octo" height="24" viewBox="0 0 16 16" width="24" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg>
+      <a href="https://github.com">github</a><span style="color:var(--fg-muted)">/</span><a href="#" class="repo-name" onclick="return false">brand-studio</a>
+      <span class="badge-pill">Public</span>
+      <span class="badge-pill" style="color:var(--green);border-color:rgba(63,185,80,.4)">Hiring</span>
+    </div>
+    <div class="repo-actions">
+      <button class="gh-btn" id="starBtn" onclick="toggleStar()">
+        <svg height="16" viewBox="0 0 16 16" width="16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"></path></svg>
+        <span id="starLabel">Star</span> <span class="count" id="starCount">2,026</span>
+      </button>
+      <a class="gh-btn" href="JoshuaOpel_CreativeDirector.pdf" target="_blank" rel="noopener">
+        <svg height="16" viewBox="0 0 16 16" width="16" aria-hidden="true"><path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path></svg>
+        Fork the résumé <span class="count">PDF</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <h1 class="pr-title"><span class="mono">feat(brand-studio):</span> hire a Creative Director who builds like a developer <span class="num">#2026</span></h1>
+  <div class="pr-meta">
+    <span class="state open" id="prState">
+      <svg id="prStateIcon" height="16" viewBox="0 0 16 16" width="16" aria-hidden="true"><path d="M1.5 3.25a2.25 2.25 0 1 1 3 2.122v5.256a2.251 2.251 0 1 1-1.5 0V5.372A2.25 2.25 0 0 1 1.5 3.25Zm5.677-.177L9.573.677A.25.25 0 0 1 10 .854V2.5h1A2.5 2.5 0 0 1 13.5 5v5.628a2.251 2.251 0 1 1-1.5 0V5a1 1 0 0 0-1-1h-1v1.646a.25.25 0 0 1-.427.177L7.177 3.427a.25.25 0 0 1 0-.354ZM3.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm0 9.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm8.25.75a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Z"></path></svg>
+      <span id="prStateLabel">Open</span>
+    </span>
+    <span><a href="https://www.linkedin.com/in/joshuaopel"><b style="color:var(--fg)">joshuaopel</b></a> wants to merge <b style="color:var(--fg)">20 years</b> into <span class="branch">github:brand-studio</span> from <span class="branch">joshuaopel:creative-director</span></span>
+  </div>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" role="tab" data-tab="conversation">
+      <svg height="16" viewBox="0 0 16 16" width="16" aria-hidden="true"><path d="M1 2.75C1 1.784 1.784 1 2.75 1h10.5c.966 0 1.75.784 1.75 1.75v7.5A1.75 1.75 0 0 1 13.25 12H9.06l-2.573 2.573A1.458 1.458 0 0 1 4 13.543V12H2.75A1.75 1.75 0 0 1 1 10.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h4.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path></svg>
+      Conversation <span class="counter">3</span>
+    </button>
+    <button class="tab" role="tab" data-tab="commits">
+      <svg height="16" viewBox="0 0 16 16" width="16" aria-hidden="true"><path d="M11.93 8.5a4.002 4.002 0 0 1-7.86 0H.75a.75.75 0 0 1 0-1.5h3.32a4.002 4.002 0 0 1 7.86 0h3.32a.75.75 0 0 1 0 1.5Zm-1.43-.75a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z"></path></svg>
+      Commits <span class="counter">16</span>
+    </button>
+    <button class="tab" role="tab" data-tab="files">
+      <svg height="16" viewBox="0 0 16 16" width="16" aria-hidden="true"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg>
+      Files changed <span class="counter">4</span>
+    </button>
+  </nav>
+
+  <div class="layout">
+    <div style="min-width:0">
+
+      <!-- ============ CONVERSATION ============ -->
+      <section class="tab-panel active" id="panel-conversation" role="tabpanel">
+
+        <div class="timeline-item">
+          <img class="avatar" src="https://github.com/joshuaopel.png" alt="Joshua Opel">
+          <div class="comment">
+            <div class="comment-header"><b>joshuaopel</b> commented — Flower Mound, TX (Remote) <span class="author-badge" style="margin-left:auto">Author</span></div>
+            <div class="comment-body">
+              <h2>Summary</h2>
+              <p>This PR merges <b>20+ years of creative leadership</b> — AAA games, enterprise XR, and AI-native production — into GitHub's Brand Studio.</p>
+              <p>I lead senior creative talent <span class="hl">without over-directing it</span>: translating executive priorities, product narratives, and business signals into clear creative direction, then creating the conditions for the team to do its best work. Developer culture isn't adjacent to my career — <b>it is my career</b>. I shipped AAA titles, taught game artists, built creative tooling used by global teams, and now run an AI-native studio where every prototype lives in a repo.</p>
+              <h2>What's in this change</h2>
+              <ul>
+                <li><b>Brand systems that scale</b> — creative standards, documentation, and enablement adopted across distributed design + engineering teams</li>
+                <li><b>Executive storytelling</b> — Fortune 500 keynote demos, CES &amp; SXSW brand moments, delivered on hard deadlines</li>
+                <li><b>AI leverage without sacrificing craft</b> — founded Gen3D Studio: <code>6 → 200+</code> practitioners in under 90 days at 85% adoption, inside a ~700,000-person org</li>
+                <li><b>Developer authenticity</b> — DOOM, Ghostbusters, The Walking Dead, Star Wars on the résumé; Blender, Unity, and web tooling in public repos today</li>
+              </ul>
+              <h2>Why this merge is safe</h2>
+              <ul>
+                <li>✅ No breaking changes to a high-functioning team — this change is <b>additive</b>: sharper focus, stronger connective tissue, clearer direction</li>
+                <li>✅ Backwards compatible with the existing GitHub brand system</li>
+                <li>✅ Extensively tested in production for two decades</li>
+                <li>✅ Zero regressions to team culture — <code>micromanagement: null</code></li>
+              </ul>
+              <p style="color:var(--fg-muted);font-size:13px;margin-bottom:0">P.S. This page is a single hand-built <code>index.html</code> — no framework, no build step — designed by me and pair-programmed with AI, then shipped with <code>gh</code> to GitHub Pages. Practicing what I'd preach.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="event">
+          <span class="event-icon"><svg height="14" viewBox="0 0 16 16" width="14" aria-hidden="true"><path d="M2.5 7.775V2.75a.25.25 0 0 1 .25-.25h5.025a.25.25 0 0 1 .177.073l6.25 6.25a.25.25 0 0 1 0 .354l-5.025 5.025a.25.25 0 0 1-.354 0l-6.25-6.25a.25.25 0 0 1-.073-.177Zm-1.5 0V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 0 1 0 2.474l-5.026 5.026a1.75 1.75 0 0 1-2.474 0l-6.25-6.25A1.752 1.752 0 0 1 1 7.775Zm6-2.275a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg></span>
+          <span><b>joshuaopel</b> added labels
+            <span class="label" style="background:rgba(63,185,80,.15);color:var(--green);border:1px solid rgba(63,185,80,.4)">creative-direction</span>
+            <span class="label" style="background:rgba(88,166,255,.15);color:var(--blue);border:1px solid rgba(88,166,255,.4)">brand-systems</span>
+            <span class="label" style="background:rgba(163,113,247,.15);color:var(--purple);border:1px solid rgba(163,113,247,.4)">ai-native</span>
+            <span class="label" style="background:rgba(210,153,34,.15);color:var(--orange);border:1px solid rgba(210,153,34,.4)">people-leadership</span>
+          </span>
+        </div>
+
+        <div class="timeline-item">
+          <span class="avatar avatar-icon" aria-hidden="true"><svg height="22" viewBox="0 0 16 16" width="22"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"></path></svg></span>
+          <div class="graph-card">
+            <h3>2,847 contributions across 22 years of making things</h3>
+            <div class="sub">$ git log --graph --career &nbsp;·&nbsp; hover the graph — the <span style="color:var(--orange)">glowing cells</span> are shipped milestones</div>
+            <div class="graph-scroll">
+              <div class="graph" id="graph" aria-label="Career contribution graph, 2004 to 2026"></div>
+              <div class="graph-eras" id="graphEras"></div>
+            </div>
+            <div class="graph-legend">Less <span class="cell" style="background:var(--g0)"></span><span class="cell" style="background:var(--g1)"></span><span class="cell" style="background:var(--g2)"></span><span class="cell" style="background:var(--g3)"></span><span class="cell" style="background:var(--g4)"></span> More</div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <span class="avatar avatar-icon" style="background:linear-gradient(135deg,#8957e5,#1f6feb)" aria-hidden="true">
+            <svg height="22" viewBox="0 0 24 24" width="22" fill="#fff"><path d="M12 2a4.5 4.5 0 0 0-4.473 4H7.5A4.5 4.5 0 0 0 3 10.5v3.677a2.25 2.25 0 0 0 .659 1.591l.591.591A6.75 6.75 0 0 0 9.023 18.5h5.954a6.75 6.75 0 0 0 4.773-2.14l.591-.592A2.25 2.25 0 0 0 21 14.176V10.5A4.5 4.5 0 0 0 16.5 6h-.027A4.5 4.5 0 0 0 12 2Zm-3.75 9.5a1.25 1.25 0 1 1 2.5 0v1a1.25 1.25 0 1 1-2.5 0v-1Zm5 0a1.25 1.25 0 1 1 2.5 0v1a1.25 1.25 0 1 1-2.5 0v-1ZM7 20.25c0-.414.336-.75.75-.75h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1-.75-.75Z"/></svg>
+          </span>
+          <div class="comment">
+            <div class="comment-header"><b>Copilot</b> reviewed these changes <span class="label" style="background:rgba(63,185,80,.15);color:var(--green);border:1px solid rgba(63,185,80,.4);margin-left:auto">✓ Approved</span></div>
+            <div class="comment-body">
+              <p><b>Copilot review summary:</b> I analyzed this candidate against the <code>Creative Director, Brand Studio</code> role requirements.</p>
+              <ul>
+                <li>Candidate has <b>been the audience</b>: shipped AAA titles, taught game artists, builds developer tooling in public repos. Developer-authenticity check passes without mocks.</li>
+                <li>Leadership pattern matches spec: <i>"sets direction, sharpens ideas, raises the bar — without getting into every pixel."</i></li>
+                <li>Rare dual signal detected: <b>brand-system craft</b> at enterprise scale <i>and</i> <b>AI-production fluency</b> (founded a 200+ practitioner generative AI studio before it was cool).</li>
+                <li>No blocking issues found. One suggestion: <b>schedule the interview</b>.</li>
+              </ul>
+              <p style="color:var(--fg-muted);font-size:12px;margin-bottom:0">💬 Have questions? Ask me — I'm the green &amp; purple button in the corner.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="event" id="mergedEvent" style="display:none">
+          <span class="event-icon purple"><svg height="14" viewBox="0 0 16 16" width="14" aria-hidden="true"><path d="M5.45 5.154A4.25 4.25 0 0 0 9.25 7.5h1.378a2.251 2.251 0 1 1 0 1.5H9.25A5.734 5.734 0 0 1 5 7.123v3.505a2.25 2.25 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.95-.218ZM4.25 13.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm8.5-4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path></svg></span>
+          <span><b>you</b> merged 20 years of experience into <span class="branch">github:brand-studio</span> just now 🎉</span>
+        </div>
+
+        <div class="timeline-item">
+          <span class="avatar avatar-icon" aria-hidden="true"><svg height="20" viewBox="0 0 16 16" width="20"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></span>
+          <div class="merge-box" id="mergeBox">
+            <div class="merge-status-row">
+              <span class="status-icon green"><svg height="16" viewBox="0 0 16 16" width="16" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></span>
+              <div style="min-width:0;flex:1">
+                <b>All checks have passed</b>
+                <div style="color:var(--fg-muted);font-size:13px">7 successful checks — mapped 1:1 to your required qualifications</div>
+                <div class="checks-list" style="margin-top:10px;border:1px solid var(--border-subtle);border-radius:6px">
+                  <div class="check-row"><span class="ok">✓</span><span class="name">quals / experience</span><span class="desc">12+ years in product or brand design → passed with 20+</span></div>
+                  <div class="check-row"><span class="ok">✓</span><span class="name">quals / brand-systems</span><span class="desc">5+ years brand systems &amp; visual identity → enterprise scale, global teams</span></div>
+                  <div class="check-row"><span class="ok">✓</span><span class="name">quals / people-mgmt</span><span class="desc">5+ years people management → mentored students to senior specialists</span></div>
+                  <div class="check-row"><span class="ok">✓</span><span class="name">culture / dev-authentic</span><span class="desc">Shipped AAA titles; builds in public repos; is the audience</span></div>
+                  <div class="check-row"><span class="ok">✓</span><span class="name">culture / no-micromanage</span><span class="desc">"Not a director in every pixel" — it's literally his philosophy</span></div>
+                  <div class="check-row"><span class="ok">✓</span><span class="name">exec / stakeholders</span><span class="desc">Fortune 500 keynotes, CES &amp; SXSW, diplomatic pushback included</span></div>
+                  <div class="check-row"><span class="ok">✓</span><span class="name">ai / ship-to-learn</span><span class="desc">Gen3D Studio: 6 → 200+ practitioners, 90 days, 85% adoption</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="merge-status-row">
+              <span class="status-icon green"><svg height="16" viewBox="0 0 16 16" width="16" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></span>
+              <div>
+                <b>This branch has no conflicts with the base branch</b>
+                <div style="color:var(--fg-muted);font-size:13px">Merging can be performed automatically. Remote-first, just like GitHub.</div>
+              </div>
+            </div>
+            <div class="merge-status-row" style="background:var(--bg-subtle)">
+              <div>
+                <button class="btn-merge" id="mergeBtn" onclick="handleMerge()">
+                  <svg height="16" viewBox="0 0 16 16" width="16" aria-hidden="true"><path d="M5.45 5.154A4.25 4.25 0 0 0 9.25 7.5h1.378a2.251 2.251 0 1 1 0 1.5H9.25A5.734 5.734 0 0 1 5 7.123v3.505a2.25 2.25 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.95-.218ZM4.25 13.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm8.5-4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path></svg>
+                  <span id="mergeBtnLabel">Merge pull request</span>
+                </button>
+                <div style="color:var(--fg-muted);font-size:12px;margin-top:8px" id="mergeHint">Go ahead. You know you want to.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="merge-box" id="mergedBox" style="display:none;border-color:rgba(163,113,247,.4)">
+            <div class="merge-status-row">
+              <span class="status-icon purple"><svg height="16" viewBox="0 0 16 16" width="16" aria-hidden="true"><path d="M5.45 5.154A4.25 4.25 0 0 0 9.25 7.5h1.378a2.251 2.251 0 1 1 0 1.5H9.25A5.734 5.734 0 0 1 5 7.123v3.505a2.25 2.25 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.95-.218ZM4.25 13.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm8.5-4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path></svg></span>
+              <div>
+                <b>Pull request successfully merged</b> 🎉
+                <div style="color:var(--fg-muted);font-size:13px;margin-top:2px">Nice merge. In real life this step is called <b>an interview</b> — and it's one click away:</div>
+                <div class="merged-cta">
+                  <a class="btn-cta primary" href="mailto:joshuaopel@gmail.com?subject=Creative%20Director%2C%20Brand%20Studio%20%E2%80%94%20let's%20talk&body=Hi%20Joshua%2C%0A%0AWe%20saw%20PR%20%232026%20and%20we'd%20like%20to%20merge%20for%20real.">✉️ Email Joshua</a>
+                  <a class="btn-cta" href="https://www.linkedin.com/in/joshuaopel" target="_blank" rel="noopener">💼 LinkedIn</a>
+                  <a class="btn-cta" href="JoshuaOpel_CreativeDirector.pdf" target="_blank" rel="noopener">📄 Résumé (PDF)</a>
+                  <a class="btn-cta" href="https://bowlerhatstudio.com" target="_blank" rel="noopener">🎩 Bowler Hat Studio</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ============ COMMITS ============ -->
+      <section class="tab-panel" id="panel-commits" role="tabpanel">
+        <div id="commitsMount"></div>
+      </section>
+
+      <!-- ============ FILES CHANGED ============ -->
+      <section class="tab-panel" id="panel-files" role="tabpanel">
+        <p style="color:var(--fg-muted);margin-bottom:16px">Showing <b style="color:var(--fg)">4 changed files</b> with <span class="diff-stat"><span class="add">+247 additions</span> and <span class="del">−12 deletions</span></span>. What actually changes when this PR lands:</p>
+
+        <div class="file-diff">
+          <div class="file-header"><span style="color:var(--fg-muted)">📄</span> brand-studio/creative-direction.md <span class="diff-stat" style="margin-left:auto"><span class="add">+4</span> <span class="del">−2</span></span></div>
+          <table class="diff-table"><tbody>
+            <tr class="hunk"><td class="ln">..</td><td>@@ how creative direction happens @@</td></tr>
+            <tr class="del-line"><td class="ln">12</td><td>- direction: reactive, request-driven</td></tr>
+            <tr class="del-line"><td class="ln">13</td><td>- signal_vs_noise: unsorted</td></tr>
+            <tr class="add-line"><td class="ln">12</td><td>+ direction: clear, strategy-led, translated from executive &amp; product signals</td></tr>
+            <tr class="add-line"><td class="ln">13</td><td>+ signal_vs_noise: sorted   <span class="cmt"># focus is protected, priorities are clarified</span></td></tr>
+            <tr class="add-line"><td class="ln">14</td><td>+ creative_bar: raised      <span class="cmt"># sharpened, not seized</span></td></tr>
+            <tr class="add-line"><td class="ln">15</td><td>+ brand_feel: unmistakably_github   <span class="cmt"># keynote stage → social post → exec deck</span></td></tr>
+          </tbody></table>
+        </div>
+
+        <div class="file-diff">
+          <div class="file-header"><span style="color:var(--fg-muted)">📄</span> team/culture.yml <span class="diff-stat" style="margin-left:auto"><span class="add">+5</span> <span class="del">−1</span></span></div>
+          <table class="diff-table"><tbody>
+            <tr class="hunk"><td class="ln">..</td><td>@@ team operating values @@</td></tr>
+            <tr><td class="ln">7</td><td>  trust: high</td></tr>
+            <tr><td class="ln">8</td><td>  craft: protected</td></tr>
+            <tr class="del-line"><td class="ln">9</td><td>- micromanagement: undefined</td></tr>
+            <tr class="add-line"><td class="ln">9</td><td>+ micromanagement: null     <span class="cmt"># not a director in every pixel</span></td></tr>
+            <tr class="add-line"><td class="ln">10</td><td>+ mentorship: always        <span class="cmt"># students → senior specialists, 20 years running</span></td></tr>
+            <tr class="add-line"><td class="ln">11</td><td>+ autonomy: preserved       <span class="cmt"># conditions for great work, not control of it</span></td></tr>
+            <tr class="add-line"><td class="ln">12</td><td>+ ai_workflows: human_centered   <span class="cmt"># AI augments artists; humans own taste &amp; intent</span></td></tr>
+            <tr class="add-line"><td class="ln">13</td><td>+ energy: generated         <span class="cmt"># see: leadership principles</span></td></tr>
+          </tbody></table>
+        </div>
+
+        <div class="file-diff">
+          <div class="file-header"><span style="color:var(--fg-muted)">📄</span> .github/workflows/brand-consistency.yml <span class="diff-stat" style="margin-left:auto"><span class="add">+9</span> <span class="del">−0</span></span></div>
+          <table class="diff-table"><tbody>
+            <tr class="add-line"><td class="ln">1</td><td>+ name: brand-travels-consistently</td></tr>
+            <tr class="add-line"><td class="ln">2</td><td>+ on: [keynote, product_launch, campaign, social_moment, exec_deck, blog]</td></tr>
+            <tr class="add-line"><td class="ln">3</td><td>+ jobs:</td></tr>
+            <tr class="add-line"><td class="ln">4</td><td>+   raise_the_bar:</td></tr>
+            <tr class="add-line"><td class="ln">5</td><td>+     runs-on: every-surface</td></tr>
+            <tr class="add-line"><td class="ln">6</td><td>+     steps:</td></tr>
+            <tr class="add-line"><td class="ln">7</td><td>+       - uses: joshuaopel/scalable-creative-systems@v20</td></tr>
+            <tr class="add-line"><td class="ln">8</td><td>+       - uses: joshuaopel/ai-assisted-production@latest</td></tr>
+            <tr class="add-line"><td class="ln">9</td><td>+       - run: echo "distinct, modern, developer-authentic, creatively ambitious"</td></tr>
+          </tbody></table>
+        </div>
+
+        <div class="file-diff">
+          <div class="file-header"><span style="color:var(--fg-muted)">📄</span> README.md <span class="diff-stat" style="margin-left:auto"><span class="add">+1</span> <span class="del">−0</span></span></div>
+          <table class="diff-table"><tbody>
+            <tr class="hunk"><td class="ln">..</td><td>@@ Brand Studio · Team @@</td></tr>
+            <tr><td class="ln">21</td><td>  A tight-knit, high-functioning team of brand, motion,</td></tr>
+            <tr><td class="ln">22</td><td>  illustration, and presentation designers.</td></tr>
+            <tr class="add-line"><td class="ln">23</td><td>+ Creative Director: Joshua Opel   <span class="cmt">&lt;!-- proposed in PR #2026 --&gt;</span></td></tr>
+          </tbody></table>
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        <span>
+          <svg class="octo" height="16" viewBox="0 0 16 16" width="16" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg>
+          Designed by <b style="color:var(--fg)">Joshua Opel</b> · pair-programmed with AI · shipped via <code class="mono">gh</code> to GitHub Pages — the medium is the message.
+        </span>
+        <span><a href="mailto:joshuaopel@gmail.com">joshuaopel@gmail.com</a> · <a href="https://www.linkedin.com/in/joshuaopel" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://github.com/joshuaopel" target="_blank" rel="noopener">github.com/joshuaopel</a></span>
+      </footer>
+    </div>
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <h4>Reviewers</h4>
+        <div class="reviewer">
+          <span class="avatar small avatar-icon" style="position:static;background:linear-gradient(135deg,#8957e5,#1f6feb)"><svg height="14" viewBox="0 0 24 24" width="14" fill="#fff"><path d="M12 2a4.5 4.5 0 0 0-4.473 4H7.5A4.5 4.5 0 0 0 3 10.5v3.677a2.25 2.25 0 0 0 .659 1.591l.591.591A6.75 6.75 0 0 0 9.023 18.5h5.954a6.75 6.75 0 0 0 4.773-2.14l.591-.592A2.25 2.25 0 0 0 21 14.176V10.5A4.5 4.5 0 0 0 16.5 6h-.027A4.5 4.5 0 0 0 12 2Zm-3.75 9.5a1.25 1.25 0 1 1 2.5 0v1a1.25 1.25 0 1 1-2.5 0v-1Zm5 0a1.25 1.25 0 1 1 2.5 0v1a1.25 1.25 0 1 1-2.5 0v-1Z"/></svg></span>
+          Copilot <span class="status" style="color:var(--green)">✓</span>
+        </div>
+        <div class="reviewer">
+          <span class="avatar small avatar-icon" style="position:static">👀</span>
+          brand-studio <span class="status" style="color:var(--orange)" title="Review requested — that's you">●</span>
+        </div>
+        <div style="color:var(--fg-subtle);font-size:11px;margin-top:4px">Awaiting review from <b>you</b>, actually.</div>
+      </div>
+      <div class="sidebar-section">
+        <h4>Assignees</h4>
+        <div class="reviewer"><img class="avatar small" style="position:static" src="https://github.com/joshuaopel.png" alt=""> joshuaopel</div>
+      </div>
+      <div class="sidebar-section">
+        <h4>Labels</h4>
+        <span class="label" style="background:rgba(63,185,80,.15);color:var(--green);border:1px solid rgba(63,185,80,.4)">creative-direction</span>
+        <span class="label" style="background:rgba(88,166,255,.15);color:var(--blue);border:1px solid rgba(88,166,255,.4)">brand-systems</span>
+        <span class="label" style="background:rgba(163,113,247,.15);color:var(--purple);border:1px solid rgba(163,113,247,.4)">ai-native</span>
+        <span class="label" style="background:rgba(210,153,34,.15);color:var(--orange);border:1px solid rgba(210,153,34,.4)">people-leadership</span>
+        <span class="label" style="background:rgba(248,81,73,.15);color:var(--red);border:1px solid rgba(248,81,73,.4)">remote:US</span>
+        <span class="label" style="background:rgba(139,148,158,.15);color:var(--fg-muted);border:1px solid var(--border)">good-first-hire</span>
+      </div>
+      <div class="sidebar-section">
+        <h4>Milestone</h4>
+        <div class="milestone-bar"><div></div></div>
+        <span style="color:var(--fg-muted)">90% — <b style="color:var(--fg)">World-class Brand Studio</b>. The last 10% is a hiring decision.</span>
+      </div>
+      <div class="sidebar-section">
+        <h4>Stack</h4>
+        <span class="mono" style="color:var(--fg-muted);font-size:11px;line-height:1.9">adobe-cc · figma · blender · unity · unreal · three-js · github · copilot · claude · xr · digital-twins · real-time</span>
+      </div>
+      <div class="sidebar-section contact-list">
+        <h4>2 participants — join us?</h4>
+        <a href="mailto:joshuaopel@gmail.com">✉️ joshuaopel@gmail.com</a>
+        <a href="tel:+19724152659">📞 972-415-2659</a>
+        <a href="https://www.linkedin.com/in/joshuaopel" target="_blank" rel="noopener">💼 linkedin.com/in/joshuaopel</a>
+        <a href="JoshuaOpel_CreativeDirector.pdf" target="_blank" rel="noopener">📄 Résumé (PDF)</a>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<!-- ============ COPILOT PANEL ============ -->
+<button class="copilot-fab" id="copilotFab" onclick="toggleCopilot()" aria-label="Ask Copilot about this candidate">
+  <svg height="28" viewBox="0 0 24 24" width="28" fill="#fff"><path d="M12 2a4.5 4.5 0 0 0-4.473 4H7.5A4.5 4.5 0 0 0 3 10.5v3.677a2.25 2.25 0 0 0 .659 1.591l.591.591A6.75 6.75 0 0 0 9.023 18.5h5.954a6.75 6.75 0 0 0 4.773-2.14l.591-.592A2.25 2.25 0 0 0 21 14.176V10.5A4.5 4.5 0 0 0 16.5 6h-.027A4.5 4.5 0 0 0 12 2Zm-3.75 9.5a1.25 1.25 0 1 1 2.5 0v1a1.25 1.25 0 1 1-2.5 0v-1Zm5 0a1.25 1.25 0 1 1 2.5 0v1a1.25 1.25 0 1 1-2.5 0v-1ZM7 20.25c0-.414.336-.75.75-.75h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1-.75-.75Z"/></svg>
+</button>
+<div class="copilot-panel" id="copilotPanel" role="dialog" aria-label="Copilot candidate Q&A">
+  <div class="copilot-head">
+    <span class="avatar small avatar-icon" style="position:static;background:linear-gradient(135deg,#8957e5,#1f6feb)"><svg height="14" viewBox="0 0 24 24" width="14" fill="#fff"><path d="M12 2a4.5 4.5 0 0 0-4.473 4H7.5A4.5 4.5 0 0 0 3 10.5v3.677a2.25 2.25 0 0 0 .659 1.591l.591.591A6.75 6.75 0 0 0 9.023 18.5h5.954a6.75 6.75 0 0 0 4.773-2.14l.591-.592A2.25 2.25 0 0 0 21 14.176V10.5A4.5 4.5 0 0 0 16.5 6h-.027A4.5 4.5 0 0 0 12 2Zm-3.75 9.5a1.25 1.25 0 1 1 2.5 0v1a1.25 1.25 0 1 1-2.5 0v-1Zm5 0a1.25 1.25 0 1 1 2.5 0v1a1.25 1.25 0 1 1-2.5 0v-1Z"/></svg></span>
+    <div><b>Copilot · candidate review</b><small>scripted demo — zero tokens were harmed making this</small></div>
+    <button class="dismiss" onclick="toggleCopilot()" aria-label="Close">✕</button>
+  </div>
+  <div class="copilot-body" id="copilotBody">
+    <div class="msg bot">Hi! I reviewed PR #2026. Ask me anything about the candidate — or pick a question below. 👇</div>
+  </div>
+  <div class="copilot-chips" id="copilotChips"></div>
+</div>
+
+<div id="tooltip"></div>
+
+<script>
+/* ============ data ============ */
+var ERAS = [
+  {from:2004, to:2007, level:2, label:"The DAVE School — teaching game artists", short:"DAVE School"},
+  {from:2007, to:2015, level:3, label:"AAA games — Terminal Reality & Certain Affinity", short:"AAA games · Ghostbusters · Walking Dead · DOOM"},
+  {from:2015, to:2024, level:4, label:"Accenture — Spatial Director, XR Data & AI", short:"Accenture · XR, Data & AI"},
+  {from:2024, to:2027, level:4, label:"AVI-SPL + Bowler Hat Studio — AI-native creative leadership", short:"AVI-SPL + Bowler Hat"}
+];
+var MILESTONES = {
+  "2005.0":"🎓 Lead Instructor @ The DAVE School — mentoring the next generation of game artists",
+  "2009.1":"👻 Ghostbusters: The Video Game ships",
+  "2013.0":"🧟 The Walking Dead: Survival Instinct ships",
+  "2014.2":"⚔️ Certain Affinity — DOOM (2016) & Team Fortress 2 era begins",
+  "2015.2":"🏢 Joins Accenture — Spatial Director, XR Data & AI",
+  "2018.1":"📜 U.S. Patent — Rendering Virtual Objects in 3D Environments",
+  "2019.0":"🎪 CES & SXSW — interactive demos for the XR & gaming group",
+  "2023.1":"🤖 Founds Gen3D Studio — 6 → 200+ practitioners in 90 days, 85% adoption",
+  "2024.0":"🎩 Founds Bowler Hat Studio — AI-native creative tooling, built in public",
+  "2025.2":"📈 Practice Director, Real-Time Design @ AVI-SPL",
+  "2026.1":"🚀 Opens PR #2026 → github/brand-studio (you are here)"
+};
+var COMMITS = [
+  {y:"2026", items:[
+    {m:"docs(application): open PR #2026 → github/brand-studio", s:"the commit you're reading right now", h:"a1b2f3c"},
+    {m:"feat(demo): hand-build this page — vanilla HTML, no framework, shipped via gh CLI", s:"practice what you preach", h:"9e77c04"}
+  ]},
+  {y:"2025", items:[
+    {m:"feat(leadership): Practice Director, Real-Time Design @ AVI-SPL", s:"creative standards + enablement across distributed teams", h:"7d40b8e"},
+    {m:"feat(ai-tools): ship Blender extensions, Unity editor tooling, rapid concept-to-demo pipelines", s:"Bowler Hat Studio · built and iterated in public repos", h:"5c19a2f"}
+  ]},
+  {y:"2024", items:[
+    {m:"init: Bowler Hat Studio — AI-native studio at the intersection of brand, games & tooling", s:"AI that augments artists instead of replacing them", h:"3f82d61"}
+  ]},
+  {y:"2023", items:[
+    {m:"feat(ai): found Gen3D Studio — internal generative AI creative capability", s:"6 → 200+ practitioners in under 90 days · 85% adoption · ~700,000-person org", h:"c4e5f90"},
+    {m:"feat(community): found Knights of Production — AI roundtable for creative industries", s:"responsible, human-centered AI adoption", h:"b7a3e12"}
+  ]},
+  {y:"2019–2022", items:[
+    {m:"feat(events): interactive demos & promotional content for CES and SXSW", s:"high-visibility brand moments, hard deadlines, zero misses", h:"e2d84c7"},
+    {m:"feat(digital-twin): executive demonstrations for Fortune 500 clients", s:"making complex technical systems legible through visual storytelling", h:"f19b3a5"}
+  ]},
+  {y:"2018", items:[
+    {m:"feat(patent): Rendering Virtual Objects in 3D Environments — U.S. Patent granted", s:"the paperwork kind of shipping", h:"88c1d4e"}
+  ]},
+  {y:"2015", items:[
+    {m:"feat(enterprise): join Accenture — Spatial Director, XR Data & AI", s:"scalable workflows + internal creative tools adopted globally", h:"6a9f0b3"}
+  ]},
+  {y:"2013–2014", items:[
+    {m:"feat(games): Certain Affinity — DOOM (2016), Team Fortress 2, Star Wars", s:"environments, technical art pipelines, optimization", h:"4b7e2c8"},
+    {m:"feat(leadership): Lead Artist — The Cypress Inheritance", s:"artistic leadership across environment production", h:"2d5a91f"},
+    {m:"ship: The Walking Dead: Survival Instinct 🧟", s:"Terminal Reality", h:"1c3f7e6"}
+  ]},
+  {y:"2009", items:[
+    {m:"ship: Ghostbusters: The Video Game 👻", s:"who ya gonna call? technical art.", h:"0d8e4b2"}
+  ]},
+  {y:"2007", items:[
+    {m:"feat(games): join Terminal Reality — environment & technical art", s:"the AAA chapter begins", h:"bc6a1f9"}
+  ]},
+  {y:"2004–2006", items:[
+    {m:"feat(teaching): Lead Instructor @ The DAVE School", s:"curriculum, critiques, and industry preparation for future game artists", h:"ad4c8e1"},
+    {m:"init: a 20-year contribution streak begins", s:"first commit", h:"0000001"}
+  ]}
+];
+var QA = [
+  {q:"Why Joshua for Brand Studio?",
+   a:"Three signals rarely found in one candidate:\n\n1️⃣ He leads exactly the way the job description asks — direction and conditions, not pixels. It's been his written philosophy for years, not a line for this application.\n\n2️⃣ Brand systems at real scale — creative standards and enablement adopted across global, distributed teams at a ~700,000-person organization.\n\n3️⃣ He IS the audience. AAA-shipped, repo-native, terminal-comfortable. Developer-authentic isn't something he studies; it's his home turf."},
+  {q:"How does he actually use AI?",
+   a:"As leverage for artists, never as a replacement. Receipts:\n\n• Founded Gen3D Studio — scaled generative AI from 6 to 200+ practitioners in under 90 days at 85% adoption.\n• Ships AI-assisted production tools: Blender extensions, Unity tooling, concept-to-demo pipelines — in public repos.\n• This very page: designed by him, pair-programmed with an AI agent, deployed by an AI agent with the gh CLI to GitHub Pages. The application is the portfolio piece. 🤝"},
+  {q:"What's his leadership style?",
+   a:"From his own README:\n\n“Create environments where talented people can do their best work. Great creative organizations run on clarity, trust, mentorship, and thoughtful systems — not on a director in every pixel.”\n\n20 years of mentoring, from game-art students at The DAVE School to senior specialists at Accenture. Model, coach, care — sound familiar?"},
+  {q:"Is this a real PR?",
+   a:"No — it's a single hand-tuned index.html with no framework and no build step, hosted free on GitHub Pages.\n\nBut the merge button up there works, and so does he. Want to run the real merge? 👉 joshuaopel@gmail.com"}
+];
+
+/* ============ contribution graph ============ */
+(function(){
+  function seeded(n){var x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+  var graph=document.getElementById('graph'), eras=document.getElementById('graphEras');
+  var startY=2004,endY=2026,endQ=2; // through Q3 2026
+  var frag=document.createDocumentFragment(), totalCols=0;
+  for(var y=startY;y<=endY;y++){
+    for(var q=0;q<4;q++){
+      if(y===endY&&q>endQ)break;
+      totalCols++;
+      var era=null;
+      for(var e=0;e<ERAS.length;e++){if(y>=ERAS[e].from&&y<ERAS[e].to){era=ERAS[e];break;}}
+      var base=era?era.level:1;
+      var mKey=y+"."+ (q>2?2:q), milestone=MILESTONES[y+"."+q];
+      for(var d=0;d<7;d++){
+        var cell=document.createElement('div');
+        cell.className='cell';
+        var r=seeded(y*29+q*7+d);
+        var lvl=Math.max(0,Math.min(4,Math.round(base+(r-0.5)*2.2)));
+        cell.style.background='var(--g'+lvl+')';
+        if(milestone&&d===3){cell.classList.add('milestone');cell.style.background='var(--g4)';}
+        var tip=(milestone&&d===3)?milestone:('<b>'+y+' Q'+(q+1)+'</b> — '+(era?era.label:'origin story'));
+        cell.setAttribute('data-tip',tip);
+        frag.appendChild(cell);
+      }
+    }
+  }
+  graph.appendChild(frag);
+  // era labels sized proportionally to columns
+  var colW=13; // 10px + 3px gap
+  ERAS.forEach(function(e,i){
+    var span=document.createElement('span');
+    var from=Math.max(e.from,startY), to=Math.min(e.to,endY+1);
+    var cols=(to-from)*4; if(e.to>endY){cols=(endY-from)*4+endQ+1;}
+    span.style.width=(cols*colW)+'px';
+    span.style.flex='none';
+    span.style.borderLeft='1px solid var(--border)';
+    span.style.paddingLeft='6px';
+    span.style.whiteSpace='nowrap';
+    span.style.overflow='hidden';
+    span.style.textOverflow='ellipsis';
+    span.textContent=e.from+' · '+e.short;
+    eras.appendChild(span);
+  });
+  // tooltip
+  var tooltip=document.getElementById('tooltip');
+  graph.addEventListener('mousemove',function(ev){
+    var t=ev.target;
+    if(t.classList&&t.classList.contains('cell')){
+      tooltip.innerHTML=t.getAttribute('data-tip');
+      tooltip.style.display='block';
+      var x=Math.min(ev.clientX+14,window.innerWidth-280);
+      tooltip.style.left=x+'px';
+      tooltip.style.top=(ev.clientY+16)+'px';
+    }
+  });
+  graph.addEventListener('mouseleave',function(){tooltip.style.display='none';});
+})();
+
+/* ============ commits tab ============ */
+(function(){
+  var mount=document.getElementById('commitsMount'),html='';
+  COMMITS.forEach(function(g){
+    html+='<div class="commit-group-title"><svg height="14" viewBox="0 0 16 16" width="14" aria-hidden="true" style="fill:var(--fg-muted)"><path d="M11.93 8.5a4.002 4.002 0 0 1-7.86 0H.75a.75.75 0 0 1 0-1.5h3.32a4.002 4.002 0 0 1 7.86 0h3.32a.75.75 0 0 1 0 1.5Zm-1.43-.75a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z"></path></svg> Commits on '+g.y+'</div><div class="commit-list">';
+    g.items.forEach(function(c){
+      html+='<div class="commit-row"><img class="avatar small" style="position:static;flex:none" src="https://github.com/joshuaopel.png" alt=""><div class="commit-msg">'+c.m+'<small>'+c.s+'</small></div><div class="commit-right"><span class="verified">Verified</span><span class="sha">'+c.h+'</span></div></div>';
+    });
+    html+='</div>';
+  });
+  mount.innerHTML=html;
+})();
+
+/* ============ tabs ============ */
+document.querySelectorAll('.tab').forEach(function(tab){
+  tab.addEventListener('click',function(){
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+    document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+    tab.classList.add('active');
+    document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
+  });
+});
+
+/* ============ star button ============ */
+var starred=false;
+function toggleStar(){
+  starred=!starred;
+  var btn=document.getElementById('starBtn');
+  btn.classList.toggle('starred',starred);
+  document.getElementById('starLabel').textContent=starred?'Starred':'Star';
+  document.getElementById('starCount').textContent=starred?'2,027':'2,026';
+  if(starred)burstConfetti(24);
+}
+
+/* ============ merge flow ============ */
+var mergeStage=0;
+function handleMerge(){
+  var btn=document.getElementById('mergeBtn'),label=document.getElementById('mergeBtnLabel'),hint=document.getElementById('mergeHint');
+  if(mergeStage===0){
+    mergeStage=1;
+    btn.classList.add('confirm');
+    label.textContent='Confirm merge';
+    hint.textContent='Last chance to micromanage this decision. (He wouldn’t.)';
+    return;
+  }
+  // merged!
+  document.getElementById('mergeBox').style.display='none';
+  document.getElementById('mergedBox').style.display='block';
+  document.getElementById('mergedEvent').style.display='flex';
+  var state=document.getElementById('prState');
+  state.classList.remove('open');state.classList.add('merged');
+  document.getElementById('prStateLabel').textContent='Merged';
+  document.getElementById('prStateIcon').innerHTML='<path d="M5.45 5.154A4.25 4.25 0 0 0 9.25 7.5h1.378a2.251 2.251 0 1 1 0 1.5H9.25A5.734 5.734 0 0 1 5 7.123v3.505a2.25 2.25 0 1 1-1.5 0V5.372a2.25 2.25 0 1 1 1.95-.218ZM4.25 13.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm8.5-4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"/>';
+  document.title='Merged · PR #2026 · Joshua Opel → github/brand-studio';
+  burstConfetti(220);
+}
+
+/* ============ confetti ============ */
+var canvas=document.getElementById('confetti'),ctx=canvas.getContext('2d'),parts=[],raf=null;
+function sizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+window.addEventListener('resize',sizeCanvas);sizeCanvas();
+var COLORS=['#3fb950','#2ea043','#a371f7','#8957e5','#58a6ff','#e3b341','#f78166','#e6edf3'];
+function burstConfetti(n){
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  for(var i=0;i<n;i++){
+    parts.push({x:Math.random()*canvas.width,y:-20-Math.random()*canvas.height*0.3,
+      vx:(Math.random()-0.5)*3,vy:2+Math.random()*4,s:4+Math.random()*6,
+      c:COLORS[Math.floor(Math.random()*COLORS.length)],r:Math.random()*Math.PI,vr:(Math.random()-0.5)*0.25});
+  }
+  if(!raf)tick();
+}
+function tick(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  parts=parts.filter(function(p){return p.y<canvas.height+30;});
+  parts.forEach(function(p){
+    p.x+=p.vx;p.y+=p.vy;p.vy+=0.06;p.r+=p.vr;
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;
+    ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6);ctx.restore();
+  });
+  if(parts.length){raf=requestAnimationFrame(tick);}else{raf=null;ctx.clearRect(0,0,canvas.width,canvas.height);}
+}
+
+/* ============ copilot panel ============ */
+var chipsMount=document.getElementById('copilotChips'),body=document.getElementById('copilotBody');
+QA.forEach(function(item,i){
+  var b=document.createElement('button');
+  b.className='chip';b.textContent=item.q;
+  b.onclick=function(){askCopilot(i,b);};
+  chipsMount.appendChild(b);
+});
+function toggleCopilot(){
+  document.getElementById('copilotPanel').classList.toggle('open');
+}
+var typing=false;
+function askCopilot(i,chip){
+  if(typing)return;
+  chip.disabled=true;
+  var u=document.createElement('div');u.className='msg user';u.textContent=QA[i].q;body.appendChild(u);
+  var m=document.createElement('div');m.className='msg bot';m.innerHTML='<span class="cursor"></span>';body.appendChild(m);
+  body.scrollTop=body.scrollHeight;
+  var text=QA[i].a,pos=0;typing=true;
+  var instant=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function step(){
+    if(instant){m.textContent=text;typing=false;body.scrollTop=body.scrollHeight;return;}
+    pos+=1+Math.floor(Math.random()*3);
+    if(pos>=text.length){m.textContent=text;typing=false;}
+    else{m.innerHTML='';m.appendChild(document.createTextNode(text.slice(0,pos)));var c=document.createElement('span');c.className='cursor';m.appendChild(c);setTimeout(step,12);}
+    body.scrollTop=body.scrollHeight;
+  }
+  setTimeout(step,350);
+}
+</script>
+</body>
+</html>
