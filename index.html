@@ -271,7 +271,7 @@ svg{vertical-align:text-bottom;fill:currentColor}
     </button>
     <button class="tab" role="tab" data-tab="commits">
       <svg height="16" viewBox="0 0 16 16" width="16" aria-hidden="true"><path d="M11.93 8.5a4.002 4.002 0 0 1-7.86 0H.75a.75.75 0 0 1 0-1.5h3.32a4.002 4.002 0 0 1 7.86 0h3.32a.75.75 0 0 1 0 1.5Zm-1.43-.75a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z"></path></svg>
-      Commits <span class="counter">16</span>
+      Commits <span class="counter">18</span>
     </button>
     <button class="tab" role="tab" data-tab="files">
       <svg height="16" viewBox="0 0 16 16" width="16" aria-hidden="true"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg>
@@ -555,15 +555,15 @@ svg{vertical-align:text-bottom;fill:currentColor}
 <script>
 /* ============ data ============ */
 var ERAS = [
-  {from:2004, to:2007, level:2, label:"The DAVE School — teaching game artists", short:"DAVE School"},
-  {from:2007, to:2015, level:3, label:"AAA games — Terminal Reality & Certain Affinity", short:"AAA games · Ghostbusters · Walking Dead · DOOM"},
+  {from:2004, to:2013, level:3, label:"AAA games — Terminal Reality", short:"AAA games · Terminal Reality · Ghostbusters · Walking Dead"},
+  {from:2013, to:2015, level:3, label:"The DAVE School (teaching game artists) → Certain Affinity", short:"DAVE School → Certain Affinity · DOOM"},
   {from:2015, to:2024, level:4, label:"Accenture — Spatial Director, XR Data & AI", short:"Accenture · XR, Data & AI"},
   {from:2024, to:2027, level:4, label:"AVI-SPL + Bowler Hat Studio — AI-native creative leadership", short:"AVI-SPL + Bowler Hat"}
 ];
 var MILESTONES = {
-  "2005.0":"🎓 Lead Instructor @ The DAVE School — mentoring the next generation of game artists",
   "2009.1":"👻 Ghostbusters: The Video Game ships",
   "2013.0":"🧟 The Walking Dead: Survival Instinct ships",
+  "2013.2":"🎓 Lead Instructor @ The DAVE School — mentoring the next generation of game artists",
   "2014.2":"⚔️ Certain Affinity — DOOM (2016) & Team Fortress 2 era begins",
   "2015.2":"🏢 Joins Accenture — Spatial Director, XR Data & AI",
   "2018.1":"📜 U.S. Patent — Rendering Virtual Objects in 3D Environments",
@@ -601,17 +601,15 @@ var COMMITS = [
   ]},
   {y:"2013–2014", items:[
     {m:"feat(games): Certain Affinity — DOOM (2016), Team Fortress 2, Star Wars", s:"environments, technical art pipelines, optimization", h:"4b7e2c8"},
+    {m:"feat(teaching): Lead Instructor @ The DAVE School", s:"curriculum, critiques, and industry preparation for future game artists", h:"ad4c8e1"},
     {m:"feat(leadership): Lead Artist — The Cypress Inheritance", s:"artistic leadership across environment production", h:"2d5a91f"},
     {m:"ship: The Walking Dead: Survival Instinct 🧟", s:"Terminal Reality", h:"1c3f7e6"}
   ]},
   {y:"2009", items:[
     {m:"ship: Ghostbusters: The Video Game 👻", s:"who ya gonna call? technical art.", h:"0d8e4b2"}
   ]},
-  {y:"2007", items:[
-    {m:"feat(games): join Terminal Reality — environment & technical art", s:"the AAA chapter begins", h:"bc6a1f9"}
-  ]},
-  {y:"2004–2006", items:[
-    {m:"feat(teaching): Lead Instructor @ The DAVE School", s:"curriculum, critiques, and industry preparation for future game artists", h:"ad4c8e1"},
+  {y:"2004", items:[
+    {m:"feat(games): join Terminal Reality — environment & technical art", s:"the AAA chapter begins", h:"bc6a1f9"},
     {m:"init: a 20-year contribution streak begins", s:"first commit", h:"0000001"}
   ]}
 ];
